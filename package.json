@@ -1,0 +1,12 @@
+{
+  "name": "dogecoin-testnet-faucet",
+  "version": "0.0.1",
+  "repository": "https://gitlab.com:toffee_/dogecoin-testnet-faucet",
+  "scripts": {
+    "start": "http-server ./src"
+  },
+  "devDependencies": {},
+  "dependencies": {
+    "http-server": "^0.12.3"
+  }
+}
