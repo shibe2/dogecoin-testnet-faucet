@@ -30,7 +30,7 @@
       <div class="ui container">
         <h3>Claim here</h3>
 
-        <form name="testnetAddrForm" class="ui form">
+        <form name="testnetAddrForm" onsubmit="return validateAddr()" class="ui form">
           <div class="field">
             <label>Testnet address</label>
             <input name="testnetAddr" type="text" required placeholder="Testnet address">
