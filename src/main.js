@@ -4,9 +4,10 @@ function validateAddr() {
     console.log(address);
   
     if (address.charAt(0) == "m" || address.charAt(0) == "n") {
-      return True;
+      return true;
     } else {
-      return False;
+      alert("Please enter a valid Testnet address");
+      return false;
     }
   
 }
