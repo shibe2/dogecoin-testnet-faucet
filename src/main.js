@@ -6,7 +6,7 @@ function validateAddr() {
     if (address.charAt(0) == "m" || address.charAt(0) == "n") {
       return true;
     } else {
-      console.log("Please enter a valid Testnet address");
+      alert("Please enter a valid Testnet address");
       return false;
     }
   
