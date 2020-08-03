@@ -30,6 +30,14 @@
       <div class="ui container">
         <h3>Claim here</h3>
 
+        <div id="error" class="ui error message" style="display: none;">
+          <div id="errorText" class="header"></div>
+        </div>
+
+        <div id="success" class="ui success message" style="display: none;">
+          <div id="successText" class="header"></div>
+        </div>
+
         <form name="testnetAddrForm" onsubmit="return validateAddr()" class="ui form">
           <div class="field">
             <label>Testnet address</label>
@@ -38,6 +46,7 @@
 
           <button class="ui button primary" type="submit">Submit</button>
         </form>
+
       </div>
     
     </div>
