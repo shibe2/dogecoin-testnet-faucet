@@ -1,3 +1,25 @@
+var token = "";
+
+function claim(address) {
+  const data = { recipient: 'address', token: 'token' };
+
+  fetch('http://localhost:8000/claim', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify(data),
+  })
+  .then(response => response.json())
+  .then(data => {
+    console.log('Success:', data);
+  })
+  .catch((error) => {
+    console.error('Error:', error);
+  });
+
+}
+
 function validateAddr() {
   var address = document.forms["testnetAddrForm"]["testnetAddr"].value;
 
@@ -10,6 +32,7 @@ function validateAddr() {
 
   if (address.charAt(0) == "m" || address.charAt(0) == "n") {
     // success
+    claim(address);
     error.style.display = "none";
     success.style.display = "block";
     successText.innerHTML = "Dogecoin sent.";
@@ -34,10 +57,11 @@ function getClaimAmount() {
         response.json()
           .then (
             function(data) {
-              // console.log(data.amount);
 
               var claimAmount = document.getElementById("claimAmount");
               claimAmount.innerHTML = "Current claim amount: " + data.amount;
+
+              token = data.token;
             }
           )
       }
