@@ -1,7 +1,7 @@
 var token = "";
 
 function claim(address) {
-  const data = { recipient: 'address', token: 'token' };
+  const data = { recipient: address, token: token };
 
   fetch('http://localhost:8000/claim', {
     method: 'POST',
@@ -10,13 +10,24 @@ function claim(address) {
     },
     body: JSON.stringify(data),
   })
-  .then(response => response.json())
-  .then(data => {
-    console.log('Success:', data);
-  })
-  .catch((error) => {
-    console.error('Error:', error);
-  });
+  .then (
+    function(response) {
+      var error = document.getElementById("error");
+      var errorText = document.getElementById("errorText");
+      var success = document.getElementById("success");
+      var successText = document.getElementById("successText");
+
+      if (response.status == 200) {
+        error.style.display = "none";
+        success.style.display = "block";
+        successText.innerHTML = "Dogecoin sent.";
+      } else {
+        success.style.display = "none";
+        error.style.display = "block";
+        errorText.innerHTML = "API Error";
+      }
+    }
+  )
 
 }
 
@@ -33,9 +44,6 @@ function validateAddr() {
   if (address.charAt(0) == "m" || address.charAt(0) == "n") {
     // success
     claim(address);
-    error.style.display = "none";
-    success.style.display = "block";
-    successText.innerHTML = "Dogecoin sent.";
   } else {
     // error
     success.style.display = "none";
