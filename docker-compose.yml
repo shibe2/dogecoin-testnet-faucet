@@ -1,0 +1,97 @@
+version: '3.7'
+
+services:
+  traefik:
+    image: "traefik:latest"
+    command:
+      #- "--api.dashboard=true"
+      #- "--api.insecure=true"
+      - "--providers.docker=true"
+      - "--providers.docker.exposedbydefault=false"
+      - "--entrypoints.web.address=:80"
+      - "--entrypoints.websecure.address=:443"
+      - "--certificatesresolvers.tlsbroker.acme.tlschallenge=true"
+      - "--certificatesresolvers.tlsbroker.acme.httpchallenge.entrypoint=web"
+      - "--certificatesresolvers.tlsbroker.acme.email=contact@dogecoin.broker"
+      - "--certificatesresolvers.tlsbroker.acme.storage=/letsencrypt/acme.json"
+    volumes:
+      - "/var/run/docker.sock:/var/run/docker.sock:ro"
+      - "./letsencrypt:/letsencrypt"
+    ports:
+      - "80:80"
+      - "443:443"
+      - "127.0.0.1:8080:8080"
+    restart: always
+    labels:
+      - "traefik.enable=true"
+      # HTTPS Redirect
+      - "traefik.http.routers.http-catchall.rule=hostregexp(`{host:.+}`)"
+      - "traefik.http.routers.http-catchall.entrypoints=web"
+      - "traefik.http.routers.http-catchall.middlewares=redirect-to-https@docker"
+      - "traefik.http.middlewares.redirect-to-https.redirectscheme.scheme=https"
+
+  frontend:
+    build: ./frontend
+    command: ["npm", "run", "build"]
+    volumes:
+      - "frontend:/usr/src/app"
+
+  nginx:
+    restart: always
+    build: ./nginx
+    depends_on:
+      - frontend
+    volumes:
+      - "data:/usr/src/app"
+    labels:
+      - "traefik.enable=true"
+    # routers
+      - "traefik.http.routers.nginx.rule=Host(`shibe.technology`)"
+      - "traefik.http.routers.nginx.entrypoints=websecure"
+      - "traefik.http.routers.nginx.tls.certresolver=tlsbroker"
+      - "traefik.http.routers.nginx.tls=true"
+    # services
+      - "traefik.http.services.nginx.loadbalancer.server.port=80"
+
+
+  backend:
+    build: ./backend
+    restart: always
+    labels:
+      - "traefik.enable=true"
+      # routers
+      - "traefik.http.routers.dogecoin-broker.rule=Host(`api.shibe.technology`)"
+      - "traefik.http.routers.dogecoin-broker.entrypoints=websecure"
+      - "traefik.http.routers.dogecoin-broker.tls.certresolver=tlsbroker"
+      - "traefik.http.routers.dogecoin-broker.tls=true"
+    volumes:
+      - "data:/app/data"
+
+  fathom:
+    image: usefathom/fathom:latest
+    restart: always
+    environment:
+      - "FATHOM_SERVER_ADDR=:8080"
+      - "FATHOM_GZIP=true"
+      - "FATHOM_DEBUG=false"
+      - "FATHOM_DATABASE_DRIVER=sqlite3"
+      - "FATHOM_DATABASE_NAME=data/fathom.db"
+      - "FATHOM_DATABASE_USER=fathom"
+      - "FATHOM_DATABASE_PASSWORD=password"
+      - "FATHOM_SECRET=secret"
+    labels:
+      - "traefik.enable=true"
+      # routers
+      - "traefik.http.routers.fathom.rule=Host(`fathom.shibe.technology`)"
+      - "traefik.http.routers.fathom.entrypoints=websecure"
+      - "traefik.http.routers.fathom.tls.certresolver=tlsbroker"
+      - "traefik.http.routers.fathom.tls=true"
+      # services
+      - "traefik.http.services.fathom.loadbalancer.server.port=8080"
+    volumes:
+      - "fathom:/app/data"
+      
+volumes:
+  frontend:
+  data:
+  fathom:
