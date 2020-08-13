@@ -1,4 +1,5 @@
 var token = "";
+var responseFromClaim = "";
 
 function claim(address) {
   const data = { recipient: address, token: token };
@@ -10,24 +11,42 @@ function claim(address) {
     },
     body: JSON.stringify(data),
   })
-  .then (
-    function(response) {
-      var error = document.getElementById("error");
-      var errorText = document.getElementById("errorText");
-      var success = document.getElementById("success");
-      var successText = document.getElementById("successText");
+  .then (response => {
+    responseFromClaim = response;
+    return response.json()
+  })
+  .then (data => {
+    var error = document.getElementById("error");
+    var errorText = document.getElementById("errorText");
+    var success = document.getElementById("success");
+    var successText = document.getElementById("successText");
 
-      if (response.status == 200) {
+    console.log(data);
+
+    switch (responseFromClaim.status) {
+      case 200:
         error.style.display = "none";
         success.style.display = "block";
-        successText.innerHTML = "Dogecoin sent.";
-      } else {
-        success.style.display = "none";
-        error.style.display = "block";
-        errorText.innerHTML = "API Error";
-      }
+        successText.innerHTML = data.amount + " Dogecoin sent.";
+
+        break;
+
+      case 403:
+        switch (data.rejectReason) {
+          case "MustWait":
+            success.style.display = "none";
+            error.style.display = "block";
+            errorText.innerHTML = "Please wait 24 hours since your last claim until you claim again.";
+
+            break;
+
+          case "InvalidToken":
+            success.style.display = "none";
+            error.style.display = "block";
+            errorText.innerHTML = "Token is invalid. Please refresh.";
+        }
     }
-  )
+  })
 
 }
 
@@ -70,6 +89,7 @@ function getClaimAmount() {
               claimAmount.innerHTML = "Current claim amount: " + data.amount;
 
               token = data.token;
+              console.log(token);
             }
           )
       }
