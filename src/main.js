@@ -1,5 +1,35 @@
 var token = "";
 var responseFromClaim = "";
+var responseStatus;
+
+function check503(data) {
+  var error = document.getElementById("error");
+  var errorText = document.getElementById("errorText");
+  var success = document.getElementById("success");
+  var successText = document.getElementById("successText");
+  var claimAmount = document.getElementById("claimAmount");
+  var submitButton = document.getElementById("submitButton");
+
+  if (responseStatus == 503) {
+    success.style.display = "none";
+    error.style.display = "block";
+    submitButton.disabled = true;
+    
+    switch (data.error) {
+      case "ServiceUnavailable":
+        errorText.innerHTML = "The faucet is currently unavailable.";
+        claimAmount.innerHTML = "Current claim amount: Faucet unavailable";
+
+      case "NoFunds":
+        errorText.innerHTML = "The faucet is out of funds.";
+        claimAmount.innerHTML = "Current claim amount: Faucet out of funds.";
+
+      case "ServicePaused":
+        errorText.innerHTML = "The faucet is paused.";
+        claimAmount.innerHTML = "Current claim amount: Faucet paused.";
+    }
+  }
+}
 
 function claim(address) {
   const data = { recipient: address, token: token };
@@ -74,26 +104,34 @@ function validateAddr() {
 }
 
 function getClaimAmount() {
-  fetch("http://localhost:8000/info")
-    .then (
-      function(response) {
-        if (response.status !== 200) {
-          console.log(response.status);
-        }
-
-        response.json()
-          .then (
-            function(data) {
-
-              var claimAmount = document.getElementById("claimAmount");
-              claimAmount.innerHTML = "Current claim amount: " + data.amount;
-
-              token = data.token;
-              console.log(token);
-            }
-          )
+  fetch("http://localhost:8000/info", {
+    headers: {
+      // debug with error codes here
+    }
+  })
+  .then (
+    function(response) {
+      if (response.status !== 200) {
+        console.log(response.status);
       }
-    )
+
+      responseStatus = response.status;
+
+      response.json()
+      .then (
+        function(data) {
+
+          var claimAmount = document.getElementById("claimAmount");
+          claimAmount.innerHTML = "Current claim amount: " + data.amount;
+
+          token = data.token;
+          console.log(token);
+
+          check503(data);
+        }
+      )
+    }
+  )
 }
 
 getClaimAmount();
