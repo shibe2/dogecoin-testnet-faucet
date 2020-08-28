@@ -30,7 +30,10 @@ function check503(data) {
         errorText.innerHTML = "The faucet is paused.";
         claimAmount.innerHTML = "Current claim amount: Faucet paused.";
     }
+
+    return true;
   }
+  return false;
 }
 
 function claim(address) {
@@ -45,38 +48,46 @@ function claim(address) {
   })
   .then (response => {
     responseFromClaim = response;
+    responseStatus = response.status;
     return response.json()
   })
   .then (data => {
-    var error = document.getElementById("error");
-    var errorText = document.getElementById("errorText");
-    var success = document.getElementById("success");
-    var successText = document.getElementById("successText");
+    if (check503(data)) {
+      console.log("here");
+    } else {
 
-    console.log(data);
+      console.log("here after 503");
 
-    switch (responseFromClaim.status) {
-      case 200:
-        error.style.display = "none";
-        success.style.display = "block";
-        successText.innerHTML = data.amount + " Dogecoin sent.";
+      var error = document.getElementById("error");
+      var errorText = document.getElementById("errorText");
+      var success = document.getElementById("success");
+      var successText = document.getElementById("successText");
 
-        break;
+      console.log(data);
 
-      case 403:
-        switch (data.rejectReason) {
-          case "MustWait":
-            success.style.display = "none";
-            error.style.display = "block";
-            errorText.innerHTML = "Please wait 24 hours since your last claim until you claim again.";
+      switch (responseFromClaim.status) {
+        case 200:
+          error.style.display = "none";
+          success.style.display = "block";
+          successText.innerHTML = data.amount + " Dogecoin sent.";
 
-            break;
+          break;
 
-          case "InvalidToken":
-            success.style.display = "none";
-            error.style.display = "block";
-            errorText.innerHTML = "Token is invalid. Please refresh.";
-        }
+        case 403:
+          switch (data.rejectReason) {
+            case "MustWait":
+              success.style.display = "none";
+              error.style.display = "block";
+              errorText.innerHTML = "Please wait 24 hours since your last claim until you claim again.";
+
+              break;
+
+            case "InvalidToken":
+              success.style.display = "none";
+              error.style.display = "block";
+              errorText.innerHTML = "Token is invalid. Please refresh.";
+          }
+      }
     }
   })
 
