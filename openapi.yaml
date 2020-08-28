@@ -1,0 +1,202 @@
+openapi: 3.0.0
+info:
+  title: Faucet API
+  description: Interface between front-end and back-end.
+  version: "0"
+paths:
+  /claim:
+    summary: Claim coins.
+    post:
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ClaimRequest'
+        required: true
+      responses:
+        "200":
+          description: Successful claim.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ClaimSucceeded'
+        "400":
+          description: Invalid request or parameters.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/InvalidRequest'
+        "403":
+          description: Claim rejected.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ClaimRejected'
+        "500":
+          description: Claim failed.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RequestFailed'
+        "503":
+          description: Service unavailable.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ServiceUnavailable'
+  /info:
+    summary: Query client and service information.
+    get:
+      responses:
+        "200":
+          description: Client and service information.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Info'
+        "500":
+          description: Internal error.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RequestFailed'
+        "503":
+          description: Service unavailable.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ServiceUnavailable'
+components:
+  schemas:
+    ClaimRejected:
+      required:
+      - rejectReason
+      type: object
+      properties:
+        rejectReason:
+          type: string
+          enum:
+          - InvalidToken
+          - MustWait
+        wait:
+          type: string
+          description: The client with this IP address cannot claim coins before the
+            given time.
+          format: date-time
+      example:
+        rejectReason: MustWait
+        wait: 2000-01-23T04:56:07Z
+    ClaimRequest:
+      required:
+      - recipient
+      type: object
+      properties:
+        recipient:
+          type: string
+          description: Cryptocurrency recipient address.
+        token:
+          type: string
+          description: The token obtained from earlier API call.
+      example:
+        recipient: nUvxPtXWKwatQim1dDbjBc6vSSWKwDvYHn
+        token: WLXhQ7dxIzSNRMseNEFYA
+    ClaimSucceeded:
+      required:
+      - amount
+      - txid
+      type: object
+      properties:
+        amount:
+          type: number
+          description: Actual amount of coins sent.
+        txid:
+          type: string
+          description: Cryptocurrency transaction identifier (hash).
+      example:
+        amount: 100
+        txid: 62a626a004273e0c4e7f526e2381de8a36591feb72b8019d16a75c44e606ea15
+    Info:
+      required:
+      - amount
+      type: object
+      properties:
+        addressVersions:
+          type: array
+          description: Accepted recipient address versions. If this parameter is absent,
+            front-end should accept any address version.
+          items:
+            type: integer
+        amount:
+          type: number
+          description: Expected giveaway amount. Actual amount may differ. Zero means
+            dry or paused faucet.
+        token:
+          type: string
+          description: A token that must be passed to other API calls where specified.
+            It is valid for at least 1 hour.
+        wait:
+          type: string
+          description: The client with this IP address cannot claim coins before the
+            given time.
+          format: date-time
+      example:
+        addressVersions:
+        - 113
+        - 196
+        amount: 100
+        token: WLXhQ7dxIzSNRMseNEFYA
+        wait: 2000-01-23T04:56:07Z
+    InvalidRequest:
+      required:
+      - requestErrors
+      type: object
+      properties:
+        requestErrors:
+          type: array
+          items:
+            $ref: '#/components/schemas/RequestError'
+      example:
+        requestErrors:
+        - error: InvalidValue
+          parameter: recipient
+    RequestError:
+      required:
+      - error
+      type: object
+      properties:
+        error:
+          type: string
+          description: The problem.
+          enum:
+          - InvalidFormat
+          - InvalidValue
+          - MissingValue
+        parameter:
+          type: string
+          description: Which request parameter has the problem. This is absent if
+            overall request is invalid.
+    RequestFailed:
+      required:
+      - error
+      type: object
+      properties:
+        error:
+          type: string
+          enum:
+          - FailedToSend
+          - InternalError
+      example:
+        error: InternalError
+    ServiceUnavailable:
+      required:
+      - error
+      type: object
+      properties:
+        error:
+          type: string
+          enum:
+          - NoFunds
+          - ServicePaused
+          - ServiceUnavailable
+      example:
+        error: ServiceUnavailable
