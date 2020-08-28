@@ -1,5 +1,40 @@
 var token = "";
 var responseFromClaim = "";
+var responseStatus;
+
+function check503(data) {
+  var error = document.getElementById("error");
+  var errorText = document.getElementById("errorText");
+  var success = document.getElementById("success");
+  var successText = document.getElementById("successText");
+  var claimAmount = document.getElementById("claimAmount");
+  var submitButton = document.getElementById("submitButton");
+
+  if (responseStatus == 503) {
+    success.style.display = "none";
+    error.style.display = "block";
+    submitButton.disabled = true;
+    
+    switch (data.error) {
+      case "ServiceUnavailable":
+        errorText.innerHTML = "The faucet is currently unavailable.";
+        claimAmount.innerHTML = "Current claim amount: Faucet unavailable";
+        break;
+
+      case "NoFunds":
+        errorText.innerHTML = "The faucet is out of funds.";
+        claimAmount.innerHTML = "Current claim amount: Faucet out of funds.";
+        break;
+
+      case "ServicePaused":
+        errorText.innerHTML = "The faucet is paused.";
+        claimAmount.innerHTML = "Current claim amount: Faucet paused.";
+    }
+
+    return true;
+  }
+  return false;
+}
 
 function claim(address) {
   const data = { recipient: address, token: token };
@@ -13,38 +48,46 @@ function claim(address) {
   })
   .then (response => {
     responseFromClaim = response;
+    responseStatus = response.status;
     return response.json()
   })
   .then (data => {
-    var error = document.getElementById("error");
-    var errorText = document.getElementById("errorText");
-    var success = document.getElementById("success");
-    var successText = document.getElementById("successText");
+    if (check503(data)) {
+      console.log("here");
+    } else {
 
-    console.log(data);
+      console.log("here after 503");
 
-    switch (responseFromClaim.status) {
-      case 200:
-        error.style.display = "none";
-        success.style.display = "block";
-        successText.innerHTML = data.amount + " Dogecoin sent.";
+      var error = document.getElementById("error");
+      var errorText = document.getElementById("errorText");
+      var success = document.getElementById("success");
+      var successText = document.getElementById("successText");
 
-        break;
+      console.log(data);
 
-      case 403:
-        switch (data.rejectReason) {
-          case "MustWait":
-            success.style.display = "none";
-            error.style.display = "block";
-            errorText.innerHTML = "Please wait 24 hours since your last claim until you claim again.";
+      switch (responseFromClaim.status) {
+        case 200:
+          error.style.display = "none";
+          success.style.display = "block";
+          successText.innerHTML = data.amount + " Dogecoin sent.";
 
-            break;
+          break;
 
-          case "InvalidToken":
-            success.style.display = "none";
-            error.style.display = "block";
-            errorText.innerHTML = "Token is invalid. Please refresh.";
-        }
+        case 403:
+          switch (data.rejectReason) {
+            case "MustWait":
+              success.style.display = "none";
+              error.style.display = "block";
+              errorText.innerHTML = "Please wait 24 hours since your last claim until you claim again.";
+
+              break;
+
+            case "InvalidToken":
+              success.style.display = "none";
+              error.style.display = "block";
+              errorText.innerHTML = "Token is invalid. Please refresh.";
+          }
+      }
     }
   })
 
@@ -74,26 +117,34 @@ function validateAddr() {
 }
 
 function getClaimAmount() {
-  fetch("http://localhost:8000/info")
-    .then (
-      function(response) {
-        if (response.status !== 200) {
-          console.log(response.status);
-        }
-
-        response.json()
-          .then (
-            function(data) {
-
-              var claimAmount = document.getElementById("claimAmount");
-              claimAmount.innerHTML = "Current claim amount: " + data.amount;
-
-              token = data.token;
-              console.log(token);
-            }
-          )
+  fetch("http://localhost:8000/info", {
+    headers: {
+      // debug with error codes here
+    }
+  })
+  .then (
+    function(response) {
+      if (response.status !== 200) {
+        console.log(response.status);
       }
-    )
+
+      responseStatus = response.status;
+
+      response.json()
+      .then (
+        function(data) {
+
+          var claimAmount = document.getElementById("claimAmount");
+          claimAmount.innerHTML = "Current claim amount: " + data.amount;
+
+          token = data.token;
+          console.log(token);
+
+          check503(data);
+        }
+      )
+    }
+  )
 }
 
 getClaimAmount();
