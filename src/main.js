@@ -19,10 +19,12 @@ function check503(data) {
       case "ServiceUnavailable":
         errorText.innerHTML = "The faucet is currently unavailable.";
         claimAmount.innerHTML = "Current claim amount: Faucet unavailable";
+        break;
 
       case "NoFunds":
         errorText.innerHTML = "The faucet is out of funds.";
         claimAmount.innerHTML = "Current claim amount: Faucet out of funds.";
+        break;
 
       case "ServicePaused":
         errorText.innerHTML = "The faucet is paused.";
