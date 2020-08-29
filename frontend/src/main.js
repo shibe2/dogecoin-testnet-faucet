@@ -2,6 +2,8 @@ var token = "";
 var responseFromClaim = "";
 var responseStatus;
 
+var URL_BACKEND = 'https://api.shibe.technology/api';
+
 function check503(data) {
   var error = document.getElementById("error");
   var errorText = document.getElementById("errorText");
@@ -39,7 +41,7 @@ function check503(data) {
 function claim(address) {
   const data = { recipient: address, token: token };
 
-  fetch('http://localhost:8000/claim', {
+  fetch(`${URL_BACKEND}/claim`, {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
@@ -117,7 +119,7 @@ function validateAddr() {
 }
 
 function getClaimAmount() {
-  fetch("http://localhost:8000/info", {
+  fetch(`${URL_BACKEND}/info`, {
     headers: {
       // debug with error codes here
     }

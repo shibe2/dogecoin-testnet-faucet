@@ -3,7 +3,8 @@
   "version": "0.0.1",
   "repository": "https://gitlab.com:toffee_/dogecoin-testnet-faucet",
   "scripts": {
-    "start": "http-server -c-1 ./src"
+    "start": "http-server -c-1 ./src",
+    "build": "cp -r src dist"
   },
   "devDependencies": {},
   "dependencies": {
