@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="fr">
+  <head>
+
+    <title>Dogecoin Testnet Faucet</title>
+    <meta charset="utf-8">
+    <meta http-equiv="content-type" content="text/html; charset=utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/semantic-ui@2.4.2/dist/semantic.min.css">
+    <base href="/">
+    
+  </head>
+
+  <body>
+
+    <div class="ui container" style="padding: 1em 3em 1em 3em;">
+      
+      <h1>Dogecoin Testnet Faucet</h1>
+
+      <div class="ui divider"></div>
+
+      <div class="ui container">
+        <p>This is a Dogecoin Testnet faucet. Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p>
+      </div>
+
+      <div class="ui divider"></div>
+
+      <div class="ui container">
+        <h3>Claim here</h3>
+
+        <p style="color: gray;"><i id="claimAmount">Current claim amount: </i></p>
+
+        <div id="error" class="ui error message" style="display: none;">
+          <div id="errorText" class="header"></div>
+        </div>
+
+        <div id="success" class="ui success message" style="display: none;">
+          <div id="successText" class="header"></div>
+        </div>
+
+        <form name="testnetAddrForm" onsubmit="return validateAddr()" class="ui form">
+          <div class="field">
+            <label>Testnet address</label>
+            <input name="testnetAddr" type="text" required placeholder="Testnet address">
+          </div>
+
+          <button id="submitButton" class="ui button primary" type="submit">Submit</button>
+        </form>
+
+      </div>
+    
+    </div>
+
+  </body>
+
+  <script src="https://cdn.jsdelivr.net/npm/jquery@3.5.1/dist/jquery.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/semantic-ui@2.4.2/dist/semantic.min.js"></script>
+  <script src="main.js"></script>
+  <!-- Fathom - simple website analytics - https://github.com/usefathom/fathom -->
+  <script>
+  (function(f, a, t, h, o, m){
+    a[h]=a[h]||function(){
+      (a[h].q=a[h].q||[]).push(arguments)
+    };
+    o=f.createElement('script'),
+    m=f.getElementsByTagName('script')[0];
+    o.async=1; o.src=t; o.id='fathom-script';
+    m.parentNode.insertBefore(o,m)
+  })(document, window, '//fathom.shibe.technology/tracker.js', 'fathom');
+  fathom('set', 'siteId', 'MJKLP');
+  fathom('trackPageview');
+  </script>
+  <!-- / Fathom -->
+</html>
