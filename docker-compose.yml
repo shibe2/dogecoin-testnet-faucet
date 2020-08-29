@@ -12,7 +12,7 @@ services:
       - "--entrypoints.websecure.address=:443"
       - "--certificatesresolvers.tlsbroker.acme.tlschallenge=true"
       - "--certificatesresolvers.tlsbroker.acme.httpchallenge.entrypoint=web"
-      - "--certificatesresolvers.tlsbroker.acme.email=contact@dogecoin.broker"
+      - "--certificatesresolvers.tlsbroker.acme.email=contact@shibe.technology"
       - "--certificatesresolvers.tlsbroker.acme.storage=/letsencrypt/acme.json"
     volumes:
       - "/var/run/docker.sock:/var/run/docker.sock:ro"
@@ -60,12 +60,14 @@ services:
     labels:
       - "traefik.enable=true"
       # routers
-      - "traefik.http.routers.dogecoin-broker.rule=Host(`api.shibe.technology`)"
-      - "traefik.http.routers.dogecoin-broker.entrypoints=websecure"
-      - "traefik.http.routers.dogecoin-broker.tls.certresolver=tlsbroker"
-      - "traefik.http.routers.dogecoin-broker.tls=true"
+      - "traefik.http.routers.backend.rule=Host(`api.shibe.technology`)"
+      - "traefik.http.routers.backend.entrypoints=websecure"
+      - "traefik.http.routers.backend.tls.certresolver=tlsbroker"
+      - "traefik.http.routers.backend.tls=true"
+    #services
+      - "traefik.http.services.backend.loadbalancer.server.port=5000"
     volumes:
-      - "data:/app/data"
+      - "data:/data"
 
   fathom:
     image: usefathom/fathom:latest
