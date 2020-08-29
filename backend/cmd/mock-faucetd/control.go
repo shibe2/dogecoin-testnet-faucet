@@ -80,6 +80,7 @@ func (self controlHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 			"InternalError",
 			"InvalidToken",
 			"InvalidValue",
+			"ServicePaused",
 			"ServiceUnavailable",
 		},
 	}
@@ -137,6 +138,8 @@ func (self controlHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 		self.f.err = faucet.ErrInvalidToken
 	case "InvalidValue":
 		self.f.err = faucet.ErrInvalidRecipient
+	case "ServicePaused":
+		self.f.err = faucet.ErrPaused
 	case "ServiceUnavailable":
 		self.f.err = faucet.ServiceUnavailableError{Err: errMock}
 	default:
