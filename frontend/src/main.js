@@ -8,7 +8,6 @@ function checkError(data) {
   var error = document.getElementById("error");
   var errorText = document.getElementById("errorText");
   var success = document.getElementById("success");
-  var successText = document.getElementById("successText");
   var claimAmount = document.getElementById("claimAmount");
   var submitButton = document.getElementById("submitButton");
 
