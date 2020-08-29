@@ -4,36 +4,54 @@ var responseStatus;
 
 var URL_BACKEND = 'https://api.shibe.technology/api';
 
-function check503(data) {
+function checkError(data) {
   var error = document.getElementById("error");
   var errorText = document.getElementById("errorText");
   var success = document.getElementById("success");
-  var successText = document.getElementById("successText");
   var claimAmount = document.getElementById("claimAmount");
   var submitButton = document.getElementById("submitButton");
 
-  if (responseStatus == 503) {
-    success.style.display = "none";
-    error.style.display = "block";
-    submitButton.disabled = true;
-    
-    switch (data.error) {
-      case "ServiceUnavailable":
-        errorText.innerHTML = "The faucet is currently unavailable.";
-        claimAmount.innerHTML = "Current claim amount: Faucet unavailable";
-        break;
+  switch (responseStatus) {
+    case 503:
+      success.style.display = "none";
+      error.style.display = "block";
+      submitButton.disabled = true;
+      
+      switch (data.error) {
+        case "ServiceUnavailable":
+          errorText.innerHTML = "The faucet is currently unavailable.";
+          claimAmount.innerHTML = "Current claim amount: Faucet unavailable";
+          break;
 
-      case "NoFunds":
-        errorText.innerHTML = "The faucet is out of funds.";
-        claimAmount.innerHTML = "Current claim amount: Faucet out of funds.";
-        break;
+        case "NoFunds":
+          errorText.innerHTML = "The faucet is out of funds.";
+          claimAmount.innerHTML = "Current claim amount: Faucet out of funds.";
+          break;
 
-      case "ServicePaused":
-        errorText.innerHTML = "The faucet is paused.";
-        claimAmount.innerHTML = "Current claim amount: Faucet paused.";
-    }
+        case "ServicePaused":
+          errorText.innerHTML = "The faucet is paused.";
+          claimAmount.innerHTML = "Current claim amount: Faucet paused.";
+      }
 
-    return true;
+      return true;
+
+    case 500:
+      success.style.display = "none";
+      error.style.display = "block";
+      submitButton.disabled = true;
+
+      switch (data.error) {
+        case "FailedToSend":
+          errorText.innerHTML = "Transaction has failed.";
+          break;
+
+        case "InternalError":
+          errorText.innerHTML = "The faucet is experiencing an internal error.";
+          claimAmount.innerHTML = "Current claim amount: Faucet unavailable";
+          break;
+      }
+
+      return true;
   }
   return false;
 }
@@ -54,7 +72,7 @@ function claim(address) {
     return response.json()
   })
   .then (data => {
-    if (check503(data)) {
+    if (checkError(data)) {
       console.log("here");
     } else {
 
@@ -121,7 +139,7 @@ function validateAddr() {
 function getClaimAmount() {
   fetch(`${URL_BACKEND}/info`, {
     headers: {
-      // debug with error codes here
+      // debug headers here
     }
   })
   .then (
@@ -142,7 +160,7 @@ function getClaimAmount() {
           token = data.token;
           console.log(token);
 
-          check503(data);
+          checkError(data);
         }
       )
     }
