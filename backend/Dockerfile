@@ -6,9 +6,12 @@ WORKDIR /backend
 COPY go.mod go.sum ./
 RUN ["go", "build", "github.com/mattn/go-sqlite3", "gopkg.in/yaml.v3"]
 COPY . .
+COPY faucetd.yaml /out/
 RUN ["go", "build", "-o", "/out/faucetd", "faucet/cmd/faucetd"]
+
 FROM scratch
 COPY --from=build /out /
-STOPSIGNAL SIGINT
 WORKDIR /data
-ENTRYPOINT ["/faucetd"]
+RUN ["/faucetd", "db", "create", "/faucetd.yaml"]
+EXPOSE 5000
+ENTRYPOINT ["/faucetd", "serve", "/faucetd.yaml"]
