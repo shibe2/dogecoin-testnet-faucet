@@ -2,7 +2,7 @@ var token = "";
 var responseFromClaim = "";
 var responseStatus;
 
-var URL_BACKEND = 'https://api.shibe.technology/api';
+var URL_BACKEND = 'http://localhost:8000';
 
 function checkError(data) {
   var error = document.getElementById("error");
@@ -105,6 +105,7 @@ function claim(address) {
       var errorText = document.getElementById("errorText");
       var success = document.getElementById("success");
       var successText = document.getElementById("successText");
+      var transationLink = document.getElementById("transactionLink");
 
       console.log(data);
 
@@ -112,7 +113,8 @@ function claim(address) {
         case 200:
           error.style.display = "none";
           success.style.display = "block";
-          successText.innerHTML = data.amount + " Dogecoin sent.";
+          successText.innerHTML = data.amount + " Dogecoin sent."
+          transactionLink.href = "https://sochain.com/tx/DOGETEST/" + data.txid;
 
           break;
 
