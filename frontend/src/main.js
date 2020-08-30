@@ -52,6 +52,29 @@ function checkError(data) {
       }
 
       return true;
+
+    case 400:
+      success.style.display = "none";
+      error.style.display = "block";
+
+      switch (data.requestErrors[0]["error"]) {
+        case "InvalidValue":
+          errorText.innerHTML = "The address you entered is invalid. Please check your address for errors or enter a new one.";
+          break;
+        
+        case "InvalidFormat":
+          errorText.innerHTML = "This should not normally happen. Check the console for details.";
+          console.log(data);
+          break;
+
+        case "MissingValue":
+          errorText.innerHTML = "This should not normally happen. Check the console for details.";
+          console.log(data);
+          break;
+      }
+
+      return true;
+  
   }
   return false;
 }
