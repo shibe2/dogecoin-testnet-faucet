@@ -4,6 +4,16 @@ var responseStatus;
 
 var URL_BACKEND = 'http://localhost:8000';
 
+function getWaitDuration(futureDate) {
+  var currentDate = new Date();
+  var difference = Math.round((currentDate.getTime() - futureDate.getTime()) / 1000 / 60);
+
+  var hours = Math.abs(Math.floor(difference / 60));
+  var minutes = Math.abs(difference % 60);
+
+  return `${hours}:${minutes}`;
+}
+
 function checkError(data) {
   var error = document.getElementById("error");
   var errorText = document.getElementById("errorText");
@@ -122,8 +132,9 @@ function claim(address) {
               success.style.display = "none";
               error.style.display = "block";
 
-              waitTime = new Date (data.wait);
-              errorText.innerHTML = `Please wait until ${waitTime} before claiming again.`;
+              var waitTime = new Date (data.wait);
+              var timeToWaitString = getWaitDuration(waitTime);
+              errorText.innerHTML = `Please wait ${timeToWaitString} before claiming again.`;
 
               break;
 
@@ -189,9 +200,11 @@ function getClaimAmount() {
           if (data.wait) {
             var submitButton = document.getElementById("submitButton");
 
-            waitTime = new Date (data.wait);
+            var waitTime = new Date (data.wait);
 
-            submitButton.innerHTML = `Wait until ${waitTime} for next claim.`;
+            var timeToWaitString = getWaitDuration(waitTime);
+
+            submitButton.innerHTML = `Wait until ${timeToWaitString} for next claim.`;
             submitButton.disabled = true;
           }
         }
