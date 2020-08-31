@@ -1,7 +1,7 @@
 var token = "";
 var responseFromClaim = "";
 var responseStatus;
-var waitTime;
+var waitTime = "";
 
 var URL_BACKEND = 'http://localhost:8000';
 
@@ -87,7 +87,6 @@ function claim(address) {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
-      'Prefer': 'status=403',
     },
     body: JSON.stringify(data),
   })
@@ -176,15 +175,8 @@ function getClaimAmount() {
       response.json()
       .then (
         function(data) {
-
-          waitTime = data.wait;
-          console.log(waitTime);
-
-          var splitIndex = waitTime.indexOf("T") + 1 
-          var splitIndexEnd = waitTime.indexOf("Z");
-              
-          waitTime = waitTime.slice(splitIndex, splitIndexEnd);
-          console.log(waitTime);
+          delete data["wait"];
+          console.log(data);
 
           var claimAmount = document.getElementById("claimAmount");
           claimAmount.innerHTML = "Current claim amount: " + data.amount;
@@ -193,8 +185,17 @@ function getClaimAmount() {
 
           checkError(data);
 
-          if (waitTime !== "") {
+          if (data.wait) {
             var submitButton = document.getElementById("submitButton");
+
+            waitTime = data.wait;
+            console.log(waitTime);
+
+            var splitIndex = waitTime.indexOf("T") + 1 
+            var splitIndexEnd = waitTime.indexOf("Z");
+                
+            waitTime = waitTime.slice(splitIndex, splitIndexEnd);
+            console.log(waitTime);
 
             submitButton.innerHTML = `Wait until ${waitTime} UTC for next claim.`;
             submitButton.disabled = true;
