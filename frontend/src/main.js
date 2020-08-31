@@ -16,6 +16,8 @@ function getWaitDuration(futureDate) {
     success.style.display = "none";
     error.style.display = "block";
     errorText.innerHTML = "Your device's clock is not set properly. Please set your clock to the correct time and try again.";
+
+    return false;
   }
 
   var hours = Math.floor(difference / 60);
@@ -220,10 +222,15 @@ function getClaimAmount() {
 
             var waitTime = new Date (data.wait);
 
-            var timeToWaitString = getWaitDuration(waitTime);
+            if (getWaitDuration(waitTime)) {
+              var timeToWaitString = getWaitDuration(waitTime);
 
-            submitButton.innerHTML = `Wait ${timeToWaitString} for next claim.`;
-            submitButton.disabled = true;
+              submitButton.innerHTML = `Wait ${timeToWaitString} for next claim.`;
+              submitButton.disabled = true;
+            } else {
+              submitButton.innerHTML = `Clock out of sync.`;
+              submitButton.disabled = true;
+            }
           }
         }
       )
