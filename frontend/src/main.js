@@ -6,12 +6,19 @@ var URL_BACKEND = 'http://localhost:8000';
 
 function getWaitDuration(futureDate) {
   var currentDate = new Date();
-  var difference = Math.round((currentDate.getTime() - futureDate.getTime()) / 1000 / 60);
+  var difference = Math.round((futureDate.getTime() - currentDate.getTime()) / 1000 / 60);
 
-  var hours = Math.abs(Math.floor(difference / 60));
-  var minutes = Math.abs(difference % 60);
+  var hours = Math.floor(difference / 60);
+  var minutes = difference % 60;
 
-  return `${hours}:${minutes}`;
+  if (difference < 60 && difference > 1) {
+    return `${minutes}m`;
+  } 
+  if (difference < 1) {
+    return "1m";
+  } 
+
+  return `${hours}h ${minutes}m`;
 }
 
 function checkError(data) {
@@ -204,7 +211,7 @@ function getClaimAmount() {
 
             var timeToWaitString = getWaitDuration(waitTime);
 
-            submitButton.innerHTML = `Wait until ${timeToWaitString} for next claim.`;
+            submitButton.innerHTML = `Wait ${timeToWaitString} for next claim.`;
             submitButton.disabled = true;
           }
         }
