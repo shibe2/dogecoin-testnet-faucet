@@ -115,7 +115,6 @@ function claim(address) {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
-      'Prefer': 'status=403',
     },
     body: JSON.stringify(data),
   })
