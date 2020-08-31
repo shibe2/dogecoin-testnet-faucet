@@ -175,7 +175,7 @@ function getClaimAmount() {
       response.json()
       .then (
         function(data) {
-          delete data["wait"];
+          // delete data["wait"];
           console.log(data);
 
           var claimAmount = document.getElementById("claimAmount");
