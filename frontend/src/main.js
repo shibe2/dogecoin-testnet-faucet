@@ -1,7 +1,6 @@
 var token = "";
 var responseFromClaim = "";
 var responseStatus;
-var waitTime = "";
 
 var URL_BACKEND = 'http://localhost:8000';
 
@@ -122,7 +121,9 @@ function claim(address) {
             case "MustWait":
               success.style.display = "none";
               error.style.display = "block";
-              errorText.innerHTML = `Please wait until ${waitTime} UTC before claiming again.`;
+
+              waitTime = new Date (data.wait);
+              errorText.innerHTML = `Please wait until ${waitTime} before claiming again.`;
 
               break;
 
@@ -188,16 +189,9 @@ function getClaimAmount() {
           if (data.wait) {
             var submitButton = document.getElementById("submitButton");
 
-            waitTime = data.wait;
-            console.log(waitTime);
+            waitTime = new Date (data.wait);
 
-            var splitIndex = waitTime.indexOf("T") + 1 
-            var splitIndexEnd = waitTime.indexOf("Z");
-                
-            waitTime = waitTime.slice(splitIndex, splitIndexEnd);
-            console.log(waitTime);
-
-            submitButton.innerHTML = `Wait until ${waitTime} UTC for next claim.`;
+            submitButton.innerHTML = `Wait until ${waitTime} for next claim.`;
             submitButton.disabled = true;
           }
         }
