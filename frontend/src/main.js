@@ -8,6 +8,16 @@ function getWaitDuration(futureDate) {
   var currentDate = new Date();
   var difference = Math.round((futureDate.getTime() - currentDate.getTime()) / 1000 / 60);
 
+  if (Math.sign(difference) === -1) {
+    var error = document.getElementById("error");
+    var errorText = document.getElementById("errorText");
+    var success = document.getElementById("success");
+
+    success.style.display = "none";
+    error.style.display = "block";
+    errorText.innerHTML = "Your device's clock is not set properly. Please set your clock to the correct time and try again.";
+  }
+
   var hours = Math.floor(difference / 60);
   var minutes = difference % 60;
 
@@ -103,6 +113,7 @@ function claim(address) {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
+      'Prefer': 'status=403',
     },
     body: JSON.stringify(data),
   })
