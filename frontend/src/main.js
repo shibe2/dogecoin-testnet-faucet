@@ -1,6 +1,7 @@
 var token = "";
 var responseFromClaim = "";
 var responseStatus;
+var waitTime;
 
 var URL_BACKEND = 'http://localhost:8000';
 
@@ -86,6 +87,7 @@ function claim(address) {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
+      'Prefer': 'status=403',
     },
     body: JSON.stringify(data),
   })
@@ -98,8 +100,6 @@ function claim(address) {
     if (checkError(data)) {
       console.log("here");
     } else {
-
-      console.log("here after 503");
 
       var error = document.getElementById("error");
       var errorText = document.getElementById("errorText");
@@ -123,7 +123,7 @@ function claim(address) {
             case "MustWait":
               success.style.display = "none";
               error.style.display = "block";
-              errorText.innerHTML = "Please wait 24 hours since your last claim until you claim again.";
+              errorText.innerHTML = `Please wait until ${waitTime} UTC before claiming again.`;
 
               break;
 
@@ -163,9 +163,7 @@ function validateAddr() {
 
 function getClaimAmount() {
   fetch(`${URL_BACKEND}/info`, {
-    headers: {
-      // debug headers here
-    }
+    headers: {}
   })
   .then (
     function(response) {
@@ -179,13 +177,28 @@ function getClaimAmount() {
       .then (
         function(data) {
 
+          waitTime = data.wait;
+          console.log(waitTime);
+
+          var splitIndex = waitTime.indexOf("T") + 1 
+          var splitIndexEnd = waitTime.indexOf("Z");
+              
+          waitTime = waitTime.slice(splitIndex, splitIndexEnd);
+          console.log(waitTime);
+
           var claimAmount = document.getElementById("claimAmount");
           claimAmount.innerHTML = "Current claim amount: " + data.amount;
 
           token = data.token;
-          console.log(token);
 
           checkError(data);
+
+          if (waitTime !== "") {
+            var submitButton = document.getElementById("submitButton");
+
+            submitButton.innerHTML = `Wait until ${waitTime} UTC for next claim.`;
+            submitButton.disabled = true;
+          }
         }
       )
     }
