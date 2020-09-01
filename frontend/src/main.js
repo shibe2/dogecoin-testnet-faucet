@@ -5328,6 +5328,7 @@ function validateAddr() {
       for (var i = 0; i < addressVersions.length; i++) {
         if (addressVersions[i] == decoded[0]) {
           claim(address);
+          return false;
         } else {
           success.style.display = "none";
           error.style.display = "block";
