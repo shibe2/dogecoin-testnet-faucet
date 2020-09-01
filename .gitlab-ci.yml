@@ -19,10 +19,10 @@ testFrontend:
     - sleep 10
     - chmod +x ../tryKill.sh
     - .././tryKill.sh
-    - make run &
+    - make run
     - sleep 5
     - docker stop MockAPI
-    - screen docker rm MockAPI
+    - docker rm MockAPI
 
 deployFrontend:
   stage: deployFrontend
