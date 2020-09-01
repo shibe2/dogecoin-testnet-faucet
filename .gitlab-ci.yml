@@ -1,0 +1,27 @@
+stages:
+  - buildFrontend
+  - testFrontend
+  - deployFrontend
+
+buildFrontend:
+  stage: buildFrontend
+  script:
+    - cd frontend
+    - npm install
+    - make deps
+
+testFrontend:
+  stage: testFrontend
+  script:
+    - npm start &
+    - sleep 10
+    - chmod +x tryKill.sh
+    - ./tryKill.sh
+    - make run
+    - docker container stop $(docker container ls –aq)
+    - docker container rm $(docker container ls –aq)
+
+deployFrontend:
+  stage: deployFrontend
+  script:
+    - echo "Not set up just yet."
