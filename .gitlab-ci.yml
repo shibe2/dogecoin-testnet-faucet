@@ -30,4 +30,4 @@ deployFrontend:
     name: staging
   script:
     - echo $CI_COMMIT_BRANCH
-    - ssh toffee@192.168.10.112 "cd ~/frontendDeployment/dogecoin-testnet-faucet && git checkout $CI_COMMIT_BRANCH && git pull && chmod +x tryKill.sh && ./tryKill.sh && cd frontend && npm install && screen -dm npm start && docker restart MockAPI"
+    - ssh toffee@192.168.10.112 "cd ~/frontendDeployment/ && sudo rm -r dogecoin-testnet-faucet && git clone git@gitlab.com:toffee_/dogecoin-testnet-faucet.git && cd dogecoin-testnet-faucet && git checkout $CI_COMMIT_BRANCH && git pull && chmod +x tryKill.sh && ./tryKill.sh && cd frontend && npm install && screen -dm npm start && docker restart MockAPI"
