@@ -14,6 +14,7 @@ testFrontend:
   stage: testFrontend
   script:
     - cd frontend
+    - npm install
     - npm start &
     - sleep 10
     - chmod +x ../tryKill.sh
