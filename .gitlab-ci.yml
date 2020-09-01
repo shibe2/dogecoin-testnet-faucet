@@ -13,10 +13,11 @@ buildFrontend:
 testFrontend:
   stage: testFrontend
   script:
+    - cd frontend
     - npm start &
     - sleep 10
-    - chmod +x tryKill.sh
-    - ./tryKill.sh
+    - chmod +x ../tryKill.sh
+    - .././tryKill.sh
     - make run
     - docker container stop $(docker container ls –aq)
     - docker container rm $(docker container ls –aq)
