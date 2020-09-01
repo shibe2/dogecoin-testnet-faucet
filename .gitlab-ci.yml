@@ -22,7 +22,7 @@ testFrontend:
     - make run &
     - sleep 5
     - docker stop MockAPI
-    - docker rm MockAPI
+    - docker rm MockAPI &
 
 deployFrontend:
   stage: deployFrontend
