@@ -20,6 +20,7 @@ testFrontend:
     - chmod +x ../tryKill.sh
     - .././tryKill.sh
     - make run &
+    - sleep 5
     - docker stop MockAPI
     - docker rm MockAPI
 
