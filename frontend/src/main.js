@@ -1,6 +1,9 @@
+var bs58check = require('bs58check');
+
 var token = "";
 var responseFromClaim = "";
 var responseStatus;
+var addressVersions;
 
 var URL_BACKEND = 'http://localhost:8000';
 
@@ -178,11 +181,27 @@ function validateAddr() {
   var success = document.getElementById("success");
   var successText = document.getElementById("successText");
 
-  if (address.charAt(0) == "m" || address.charAt(0) == "n") {
-    // success
-    claim(address);
+  var decoded = bs58check.decode(address);
+
+  console.log(addressVersions);
+  console.log(decoded);
+  console.log(decoded[0]);
+
+  if (decoded.length == 21) {
+    if (!addressVersions) {
+      claim(address);
+    } else {
+      for (var i = 0; i < addressVersions.length; i++) {
+        if (addressVersions[i] == decoded[0]) {
+          claim(address);
+        } else {
+          success.style.display = "none";
+          error.style.display = "block";
+          errorText.innerHTML = `Incorrect address version. Correct versions are ${addressVersions}.`;
+        }
+      }
+    }
   } else {
-    // error
     success.style.display = "none";
     error.style.display = "block";
     errorText.innerHTML = "Please enter a valid Testnet address.";
@@ -213,6 +232,7 @@ function getClaimAmount() {
           claimAmount.innerHTML = "Current claim amount: " + data.amount;
 
           token = data.token;
+          addressVersions = data.addressVersions;
 
           checkError(data);
 
