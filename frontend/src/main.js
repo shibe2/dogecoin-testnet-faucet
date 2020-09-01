@@ -5139,7 +5139,7 @@ var responseFromClaim = "";
 var responseStatus;
 var addressVersions;
 
-var URL_BACKEND = 'http://localhost:8000';
+var URL_BACKEND = 'http://192.168.10.112:8000';
 
 function getWaitDuration(futureDate) {
   var currentDate = new Date();
