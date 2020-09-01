@@ -18,7 +18,7 @@ testFrontend:
     - sleep 10
     - chmod +x ../tryKill.sh
     - .././tryKill.sh
-    - make run
+    - make run &
     - docker container stop $(docker container ls –aq)
     - docker container rm $(docker container ls –aq)
 
