@@ -2,7 +2,7 @@ var token = "";
 var responseFromClaim = "";
 var responseStatus;
 
-var URL_BACKEND = 'http://localhost:8000';
+var URL_BACKEND = 'https://api.shibe.technology/api';
 
 function checkError(data) {
   var error = document.getElementById("error");
