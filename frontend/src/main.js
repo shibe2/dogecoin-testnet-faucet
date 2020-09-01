@@ -23,7 +23,7 @@ function getWaitDuration(futureDate) {
   var hours = Math.floor(difference / 60);
   var minutes = difference % 60;
 
-  if (difference < 60 && difference > 1) {
+  if (difference < 60 && difference >= 1) {
     return `${minutes}m`;
   } 
   if (difference < 1) {
