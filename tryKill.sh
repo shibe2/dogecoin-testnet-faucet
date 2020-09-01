@@ -1,5 +1,5 @@
 { # try
-    kill $(ps -aux | grep '[n]pm start' | awk '{print $2}')
+    kill $(ps -aux | grep '[h]ttp' | awk '{print $2}')
 } || { # catch
     echo "Kill failed."
 }
