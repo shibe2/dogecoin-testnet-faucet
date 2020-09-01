@@ -20,8 +20,8 @@ testFrontend:
     - chmod +x ../tryKill.sh
     - .././tryKill.sh
     - make run &
-    - docker stop $(docker ps -aq)
-    - docker rm $(docker ps –aq)
+    - docker stop MockAPI
+    - docker rm MockAPI
 
 deployFrontend:
   stage: deployFrontend
