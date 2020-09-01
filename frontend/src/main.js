@@ -4,6 +4,35 @@ var responseStatus;
 
 var URL_BACKEND = 'http://localhost:8000';
 
+function getWaitDuration(futureDate) {
+  var currentDate = new Date();
+  var difference = Math.round((futureDate.getTime() - currentDate.getTime()) / 1000 / 60);
+
+  if (Math.sign(difference) === -1) {
+    var error = document.getElementById("error");
+    var errorText = document.getElementById("errorText");
+    var success = document.getElementById("success");
+
+    success.style.display = "none";
+    error.style.display = "block";
+    errorText.innerHTML = "Your device's clock is not set properly. Please set your clock to the correct time and try again.";
+
+    return false;
+  }
+
+  var hours = Math.floor(difference / 60);
+  var minutes = difference % 60;
+
+  if (difference < 60 && difference >= 1) {
+    return `${minutes}m`;
+  } 
+  if (difference < 1) {
+    return "1m";
+  } 
+
+  return `${hours}h ${minutes}m`;
+}
+
 function checkError(data) {
   var error = document.getElementById("error");
   var errorText = document.getElementById("errorText");
@@ -99,8 +128,6 @@ function claim(address) {
       console.log("here");
     } else {
 
-      console.log("here after 503");
-
       var error = document.getElementById("error");
       var errorText = document.getElementById("errorText");
       var success = document.getElementById("success");
@@ -123,7 +150,10 @@ function claim(address) {
             case "MustWait":
               success.style.display = "none";
               error.style.display = "block";
-              errorText.innerHTML = "Please wait 24 hours since your last claim until you claim again.";
+
+              var waitTime = new Date (data.wait);
+              var timeToWaitString = getWaitDuration(waitTime);
+              errorText.innerHTML = `Please wait ${timeToWaitString} before claiming again.`;
 
               break;
 
@@ -163,9 +193,7 @@ function validateAddr() {
 
 function getClaimAmount() {
   fetch(`${URL_BACKEND}/info`, {
-    headers: {
-      // debug headers here
-    }
+    headers: {}
   })
   .then (
     function(response) {
@@ -178,14 +206,31 @@ function getClaimAmount() {
       response.json()
       .then (
         function(data) {
+          // delete data["wait"];
+          console.log(data);
 
           var claimAmount = document.getElementById("claimAmount");
           claimAmount.innerHTML = "Current claim amount: " + data.amount;
 
           token = data.token;
-          console.log(token);
 
           checkError(data);
+
+          if (data.wait) {
+            var submitButton = document.getElementById("submitButton");
+
+            var waitTime = new Date (data.wait);
+
+            if (getWaitDuration(waitTime)) {
+              var timeToWaitString = getWaitDuration(waitTime);
+
+              submitButton.innerHTML = `Wait ${timeToWaitString} for next claim.`;
+              submitButton.disabled = true;
+            } else {
+              submitButton.innerHTML = `Clock out of sync.`;
+              submitButton.disabled = true;
+            }
+          }
         }
       )
     }
