@@ -1,7 +1,6 @@
 stages:
   - buildFrontend
   - testFrontend
-  - deployPrep
   - deployFrontend
 
 buildFrontend:
@@ -24,13 +23,6 @@ testFrontend:
     - sleep 5
     - docker stop MockAPI
     - docker rm MockAPI
-
-deployPrep:
-  stage: deployPrep
-  script:
-    - 'which ssh-agent || ( apt-get install -qq openssh-client )'
-    - eval $(ssh-agent -s)
-    - ssh-add <(echo "$SSH_PRIVATE_KEY" | base64 -d)
 
 deployFrontend:
   stage: deployFrontend
