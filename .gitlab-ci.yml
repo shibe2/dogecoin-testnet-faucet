@@ -19,8 +19,8 @@ testFrontend:
     - chmod +x ../tryKill.sh
     - .././tryKill.sh
     - make run &
-    - docker container stop $(docker container ls –aq)
-    - docker container rm $(docker container ls –aq)
+    - docker stop $(docker ps -aq)
+    - docker rm $(docker ps –aq)
 
 deployFrontend:
   stage: deployFrontend
