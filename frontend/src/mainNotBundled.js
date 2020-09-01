@@ -189,10 +189,12 @@ function validateAddr() {
 
   if (decoded.length == 21) {
     if (!addressVersions) {
+      console.log("claiming on first checks");
       claim(address);
     } else {
       for (var i = 0; i < addressVersions.length; i++) {
         if (addressVersions[i] == decoded[0]) {
+          console.log("claiming on addr version");
           claim(address);
           return false;
         } else {
