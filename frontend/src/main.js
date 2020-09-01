@@ -2,7 +2,7 @@ var token = "";
 var responseFromClaim = "";
 var responseStatus;
 
-var URL_BACKEND = 'https://api.shibe.technology/api';
+var URL_BACKEND = 'http://localhost:8000';
 
 function getWaitDuration(futureDate) {
   var currentDate = new Date();
