@@ -30,7 +30,7 @@ deployPrep:
   script:
     - 'which ssh-agent || ( apt-get install -qq openssh-client )'
     - eval $(ssh-agent -s)
-    - ssh-add <(echo "$SSH_PRIVATE_KEY")
+    - ssh-add <(echo "$SSH_PRIVATE_KEY" | base64 -d)
 
 deployFrontend:
   stage: deployFrontend
