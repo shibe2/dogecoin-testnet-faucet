@@ -5331,7 +5331,11 @@ function validateAddr() {
           claim(address);
           return false;
         } else {
-          errorForValidateAddr(`Incorrect address version. Correct versions are ${addressVersions}.`);
+          if (i === 0) {
+            console.log("first addr not correct");
+          } else {
+            errorForValidateAddr(`Incorrect address version. Correct versions are ${addressVersions}.`);
+          }
         }
       }
     }
