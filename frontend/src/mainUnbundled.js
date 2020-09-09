@@ -192,7 +192,7 @@ function validateAddr() {
       claim(address);
     } else {
       for (var i = 0; i < addressVersions.length; i++) {
-        if (addressVersions[i] == decoded[0]) {
+        if (i < addressVersions.length) {
           console.log("claiming on addr version");
           claim(address);
           return false;
