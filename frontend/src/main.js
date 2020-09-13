@@ -5326,14 +5326,18 @@ function validateAddr() {
       claim(address);
     } else {
       for (var i = 0; i < addressVersions.length; i++) {
+        console.log(i);
+        console.log(addressVersions.length);
+
         if (addressVersions[i] == decoded[0]) {
           console.log("claiming on addr version");
           claim(address);
           return false;
         } else {
-          if (i === 0) {
-            console.log("first addr not correct");
+          if (i < addressVersions.length - 1) {
+            console.log("addr before last wrong");
           } else {
+            console.log("here");
             errorForValidateAddr(`Incorrect address version. Correct versions are ${addressVersions}.`);
           }
         }
@@ -5396,6 +5400,7 @@ function getClaimAmount() {
 getClaimAmount();
 
 window.validateAddr = validateAddr;
+
 },{"bs58check":4}],38:[function(require,module,exports){
 'use strict'
 
