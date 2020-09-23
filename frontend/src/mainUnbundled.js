@@ -4,6 +4,7 @@ var responseStatus;
 var addressVersions;
 
 var URL_BACKEND = 'http://localhost:8000';
+var commitHashBackend = 'http://localhost:8081';
 
 var bs58check = require("bs58check");
 
@@ -263,6 +264,28 @@ function getClaimAmount() {
   )
 }
 
+function getCommitHash() {
+  fetch(`${commitHashBackend}/getCommitHash`)
+  .then (
+    (response) => {
+      if (response.status !== 200) {
+        console.log(response.status);
+      }
+
+      response.json()
+      .then (
+        (data) => {
+          console.log(data);
+
+          var commitHash = document.getElementById("commitHash");
+          commitHash.innerHTML = `Commit Hash: ${data}`;
+        }
+      )
+    }
+  )
+}
+
+getCommitHash();
 getClaimAmount();
 
 window.validateAddr = validateAddr;

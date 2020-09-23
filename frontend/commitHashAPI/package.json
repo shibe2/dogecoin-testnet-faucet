@@ -1,0 +1,15 @@
+{
+  "name": "commithashapi",
+  "version": "1.0.0",
+  "description": "Gets commit hash from git and serves it via API",
+  "main": "server.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node server.js"
+  },
+  "author": "toffee",
+  "license": "GPLv3",
+  "dependencies": {
+    "express": "^4.17.1"
+  }
+}
