@@ -3,3 +3,4 @@ dist/
 docker-compose.override.yaml
 backend/faucetd.yaml
 commitHash
+.vscode
