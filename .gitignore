@@ -4,3 +4,4 @@ docker-compose.override.yaml
 backend/faucetd.yaml
 commitHash
 .vscode
+.DS_Store
