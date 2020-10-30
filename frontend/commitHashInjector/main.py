@@ -17,17 +17,9 @@ while lineCount < len(lines) and found == False:
     if "xxxxxxxx" not in lines[lineCount]:
         lineCount += 1
     else:
+        lines[lineCount] = lines[lineCount].replace("xxxxxxxx", "Commit Hash: " + commitHash)
+        print(lines[lineCount])
         found = True
-
-for index in range(0, len(lines[lineCount])):
-    if lines[lineCount][index] == "x":
-        lineTest = lines[lineCount][index:index + 8]
-        
-        if lineTest.count("x") == len(lineTest):
-            lines[lineCount] = lines[lineCount].replace("xxxxxxxx", "Commit Hash: " + commitHash)
-
-            print(lines[lineCount])
-            break
 
 for line in lines:
     outFile.write(line)
