@@ -5398,28 +5398,6 @@ function getClaimAmount() {
   )
 }
 
-function getCommitHash() {
-  fetch(`${commitHashBackend}/getCommitHash`)
-  .then (
-    (response) => {
-      if (response.status !== 200) {
-        console.log(response.status);
-      }
-
-      response.json()
-      .then (
-        (data) => {
-          console.log(data);
-
-          var commitHash = document.getElementById("commitHash");
-          commitHash.innerHTML = `Commit Hash: ${data}`;
-        }
-      )
-    }
-  )
-}
-
-getCommitHash();
 getClaimAmount();
 
 window.validateAddr = validateAddr;

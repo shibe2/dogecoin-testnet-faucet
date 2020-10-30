@@ -1,4 +1,6 @@
-commitHash = "testing1"
+import os
+
+commitHash = os.popen("git log --pretty=format:\"%h\" -1").read()
 
 inFile = open("../src/indexVanilla.html", "r")
 outFile = open("../src/index.html", "w")
@@ -22,7 +24,7 @@ for index in range(0, len(lines[lineCount])):
         lineTest = lines[lineCount][index:index + 8]
         
         if lineTest.count("x") == len(lineTest):
-            lines[lineCount] = lines[lineCount].replace("xxxxxxxx", commitHash)
+            lines[lineCount] = lines[lineCount].replace("xxxxxxxx", "Commit Hash: " + commitHash)
 
             print(lines[lineCount])
             break
