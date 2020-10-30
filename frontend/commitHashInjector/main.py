@@ -1,12 +1,12 @@
 commitHash = "testing1"
 
-inFile = open("test.txt", "r")
-outFile = open("test2.txt", "w")
+inFile = open("../src/indexVanilla.html", "r")
+outFile = open("../src/index.html", "w")
 
 lines = []
 
 for line in inFile:
-    lines.append(line.strip())
+    lines.append(line)
 
 lineCount = 0
 found = False
@@ -29,7 +29,6 @@ for index in range(0, len(lines[lineCount])):
 
 for line in lines:
     outFile.write(line)
-    outFile.write("\n")
 
 inFile.close()
 outFile.close()
