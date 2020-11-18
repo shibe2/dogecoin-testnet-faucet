@@ -17,3 +17,6 @@ build:
 	echo "Building JS file"
 	npm install
 	browserify dist/mainUnbundled.js -o dist/main.js
+
+	echo "Removing old files"
+	rm dist/indexVanilla.html && rm dist/mainUnbundled.js
