@@ -5,3 +5,5 @@ backend/faucetd.yaml
 commitHash
 .vscode
 .DS_Store
+package-lock.json
+.theia

@@ -1,6 +1,5 @@
 deps:
 	docker pull danielgtaylor/apisprout
-	sudo npm install -g browserify
 	
 run:
 	docker run --name MockAPI -d -p 8000:8000 danielgtaylor/apisprout https://gitlab.com/shibe1/faucet-backend/-/raw/master/openapi.yaml
@@ -16,7 +15,7 @@ build:
 
 	echo "Building JS file"
 	npm install
-	browserify dist/mainUnbundled.js -o dist/main.js
+	npm run build
 
 	echo "Removing old files"
 	rm dist/indexVanilla.html && rm dist/mainUnbundled.js
