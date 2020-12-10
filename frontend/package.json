@@ -4,7 +4,7 @@
   "repository": "https://gitlab.com:toffee_/dogecoin-testnet-faucet",
   "scripts": {
     "start": "http-server -c-1 ./dist",
-    "build": "browserify dist/mainUnbundled.js -o dist/main.js"
+    "browserify:dist": "browserify dist/mainUnbundled.js -o dist/main.js"
   },
   "devDependencies": {
     "browserify": "^17.0.0"
