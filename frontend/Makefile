@@ -9,6 +9,9 @@ run:
 build:
 	@echo "BUILD STARTING"
 
+	@echo "Removing old dist"
+	rm -rf dist
+
 	@echo "Cloning src"
 	cp -r src dist
 
