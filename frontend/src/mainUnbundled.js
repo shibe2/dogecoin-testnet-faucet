@@ -4,6 +4,7 @@ var responseStatus;
 var addressVersions;
 
 var URL_BACKEND = 'http://localhost:8000';
+var commitHashBackend = 'http://localhost:8081';
 
 var bs58check = require("bs58check");
 

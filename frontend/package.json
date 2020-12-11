@@ -3,10 +3,12 @@
   "version": "0.0.1",
   "repository": "https://gitlab.com:toffee_/dogecoin-testnet-faucet",
   "scripts": {
-    "start": "http-server -c-1 ./src",
-    "build": "cp -r src dist"
+    "start": "http-server -c-1 ./dist",
+    "browserify:dist": "browserify dist/mainUnbundled.js -o dist/main.js"
   },
-  "devDependencies": {},
+  "devDependencies": {
+    "browserify": "^17.0.0"
+  },
   "dependencies": {
     "bs58check": "^2.1.2",
     "http-server": "^0.12.3"
