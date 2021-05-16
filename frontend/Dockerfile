@@ -14,4 +14,4 @@ COPY . .
 
 RUN npm install
 
-CMD [ "npm", "run", "build" ]
+# Issue. Make build won't work because we don't have the .git or git command.

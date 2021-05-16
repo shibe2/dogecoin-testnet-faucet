@@ -3,8 +3,7 @@ var responseFromClaim = "";
 var responseStatus;
 var addressVersions;
 
-var URL_BACKEND = 'http://localhost:8000';
-var commitHashBackend = 'http://localhost:8081';
+var URL_BACKEND = 'https://api.shibe.technology/api';
 
 var bs58check = require("bs58check");
 
