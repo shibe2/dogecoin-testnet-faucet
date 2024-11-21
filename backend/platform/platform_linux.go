@@ -7,19 +7,6 @@ import (
 	"path/filepath"
 )
 
-func OSProgName() string {
-	fn, err := os.Readlink("/proc/self/exe")
-	if err != nil {
-		return ""
-	}
-	fn = filepath.Base(fn)
-	switch fn {
-	case "", ".", string(filepath.Separator):
-		return ""
-	}
-	return fn
-}
-
 func DefaultCookieFile() string {
 	d, err := os.UserHomeDir()
 	if len(d) == 0 {

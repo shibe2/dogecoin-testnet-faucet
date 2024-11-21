@@ -6,6 +6,4 @@
 // Package platform contains OS-specific code.
 package platform
 
-func OSProgName() string { return "" }
-
 func DefaultCookieFile() string { return "" }
