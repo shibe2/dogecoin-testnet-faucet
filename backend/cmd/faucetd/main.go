@@ -268,7 +268,7 @@ func cmdServe(args []string) error {
 	}
 	s := server.NewServer(&cfg.Server, f)
 	go shutdownOnSignal(s)
-	err = s.Serve()
+	err = s.Serve(nil)
 	if err != nil {
 		return err
 	}

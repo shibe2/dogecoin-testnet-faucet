@@ -5,6 +5,7 @@ package server
 
 import (
 	"context"
+	"net"
 	"net/http"
 	"strings"
 	"time"
@@ -53,10 +54,14 @@ type Server struct {
 // Handle registers HTTP request handler for the given pattern.
 func (self *Server) Handle(pattern string, handler http.Handler) { self.m.Handle(pattern, handler) }
 
-// Serve listens on configured TCP address and serves HTTP requests. It returns when the server is stopped.
-func (self *Server) Serve() error {
+// Serve accepts and serves HTTP connections from l.
+// If l is nil, it listens on configured TCP address or default port.
+// Returns when the server is stopped. l is closed if not nil.
+func (self *Server) Serve(l net.Listener) error {
 	var err error
-	if len(self.certFile) > 0 || len(self.keyFile) > 0 {
+	if l != nil {
+		err = self.s.Serve(l)
+	} else if len(self.certFile) > 0 || len(self.keyFile) > 0 {
 		err = self.s.ListenAndServeTLS(self.certFile, self.keyFile)
 	} else {
 		err = self.s.ListenAndServe()

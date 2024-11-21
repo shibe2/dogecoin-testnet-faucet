@@ -147,7 +147,7 @@ func cmdServe(args []string) error {
 		s.Handle(cfg.ControlPage, h)
 	}
 	go shutdownOnSignal(s)
-	return s.Serve()
+	return s.Serve(nil)
 }
 
 func main() {
