@@ -48,6 +48,8 @@ func (self *iRecords) Pop() interface{} {
 }
 
 // RCDB keeps track of recent claims for purposes of rate limiting.
+// Claim records are used for overall rate limiting.
+// Interval records are used for per-subnet rate limiting.
 // Old records are automatically removed.
 type RCDB struct {
 	IPClaimInterval time.Duration // Minimum interval between claims from the same IP address or prefix.
@@ -156,7 +158,7 @@ func (self *RCDB) AddFromLog(cli faucet.ClaimLogIter) error {
 }
 
 // CheckAddIntervals atomically checks if the claim should be allowed now and if yes, adds corresponding interval records.
-// Returns time points of added records.
+// Returns time points of added records. These can be used to undo the operation.
 // Returns nil if claiming should not be allowed.
 func (self *RCDB) CheckAddIntervals(a [8]byte) []time.Time {
 	self.m.Lock()
@@ -206,6 +208,7 @@ func (self *RCDB) CheckInterval(a [8]byte) time.Time {
 }
 
 // DelIntervals removes records added by CheckAddIntervals.
+// Interval records added after the corresponding CheckAddIntervals call are not affected.
 func (self *RCDB) DelIntervals(a [8]byte, ts []time.Time) {
 	self.m.Lock()
 	defer self.m.Unlock()
