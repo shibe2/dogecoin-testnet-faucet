@@ -25,7 +25,8 @@ type ExAlerter struct {
 
 // BalanceAlert executes the program with arguments "balance" and the balance.
 // For example, given balance 1000:
-//  program balance 1000
+//
+//	program balance 1000
 func (self *ExAlerter) BalanceAlert(balance float64) {
 	self.m.Lock()
 	defer self.m.Unlock()
@@ -40,7 +41,9 @@ func (self *ExAlerter) BalanceAlert(balance float64) {
 
 // RateAlert executes the program with arguments "rate", the amount and period in seconds.
 // For example, given amount 1000 and period 1 hour:
-//  program rate 1000 3600
+//
+//	program rate 1000 3600
+//
 // After successful execution, further alerts of this type will be ignored until there will be a full period with no alerts.
 func (self *ExAlerter) RateAlert(amount float64, period time.Duration) {
 	self.m.Lock()
